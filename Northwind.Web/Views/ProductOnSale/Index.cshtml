@@ -1,16 +1,41 @@
 ﻿@model IEnumerable<Northwind.Contracts.Dto.Product.ProductDto>
 
+<style>
+    {
+        box-sizing: border-box;
+    }
+    /* Set additional styling options for the columns*/
+    .column {
+    float: left;
+    width: 50%;
+    position: rigth;
+    }
+
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+</style>
+
 <h4>Products On Sale</h4>
 
-<div class="flex-lg-wrap">
-    @using (Html.BeginForm("Index", "ProductOnSale", FormMethod.Get))
-    {
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<div class="row">
+    <div class="column flex-lg-wrap ">
+        @using (Html.BeginForm("Index", "ProductOnSale", FormMethod.Get))
+        {
             <p>
                 Find By @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { placeholder = "Product Name" })
                 <input type="submit" value="Search" />
             </p>
-    }
+        }
+    </div>
+    <div class="column">
+        <i class='fas fa-shopping-cart' style='font-size:30px'></i>
+    </div>
 </div>
+
 
 @foreach (var item in Model)
 {
@@ -29,12 +54,14 @@
                     @Html.LabelFor(modelItem => item.UnitsInStock, htmlAttributes : new{@class="form-label"}) :
                     @Html.DisplayFor(modelItem => item.UnitsInStock)
                 </p>
-                <a asp-action="Details" asp-route-id="@item.ProductId">
-                    <button class="btn btn-secondary me-md-2" type="button">Detail</button>
-                </a>
-                <a asp-action="" asp-route-id="@item.ProductId">
-                    <button class="btn btn-primary me-md-2" type="button">Add To Cart</button>
-                </a>
+                <div>
+                    <a asp-action="Details" asp-route-id="@item.ProductId">
+                        <button class="btn btn-secondary me-md-2" type="button">Detail</button>
+                    </a>
+                    <a asp-action="" asp-route-id="@item.ProductId">
+                        <button class="btn btn-primary me-md-2" type="button">Add To Cart</button>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

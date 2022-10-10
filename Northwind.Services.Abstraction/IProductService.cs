@@ -1,4 +1,5 @@
 ﻿using Northwind.Contracts.Dto.Category;
+using Northwind.Contracts.Dto.Order;
 using Northwind.Contracts.Dto.Product;
 using Northwind.Domain.Models;
 using System;
@@ -25,6 +26,7 @@ namespace Northwind.Services.Abstraction
 
         void CreateProductManyPhoto(ProductForCreateDto productForCreateDto, List<ProductPhotoCreateDto> productPhotoCreateDtos);
 
+        void CreateOrderDetail(OrderForCreateDto orderForCreateDto, OrderDetailForCreateDto orderDetailForCreateDto);
         void Insert(ProductForCreateDto productForCreateDto);
 
         void Edit(ProductDto productDto);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Northwind.Contracts.Dto.Order;
 using Northwind.Contracts.Dto.Product;
 using Northwind.Contracts.Dto.Supplier;
 using Northwind.Domain.Base;
@@ -21,6 +22,19 @@ namespace Northwind.Services
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+        }
+
+        public void CreateOrderDetail(OrderForCreateDto orderForCreateDto, OrderDetailForCreateDto orderDetailForCreateDto)
+        {
+            //insert order ke tabel order
+            var orderModel = _mapper.Map<Order>(orderForCreateDto);
+            _repositoryManager.OrderRepository.Insert(orderModel);
+            _repositoryManager.Save();
+
+            var orderDetailModel = _mapper.Map<OrderDetail>(orderDetailForCreateDto);
+            orderDetailModel.OrderId = orderModel.OrderId;
+            _repositoryManager.OrderDetailRepository.Insert(orderDetailModel);
+            _repositoryManager.Save();
         }
 
         public void CreateProductManyPhoto(ProductForCreateDto productForCreateDto, List<ProductPhotoCreateDto> productPhotoCreateDtos)

@@ -1,5 +1,7 @@
 ﻿using Northwind.Contracts.Dto.Category;
+using Northwind.Contracts.Dto.Order;
 using Northwind.Contracts.Dto.Supplier;
+using Northwind.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,6 +31,7 @@ namespace Northwind.Contracts.Dto.Product
 
         public virtual CategoryDto Category { get; set; }
         public virtual SupplierDto Supplier { get; set; }
+        public virtual ICollection<OrderDetailDto> OrderDetails { get; set; }
         public virtual ICollection<ProductPhotoDto> ProductPhotos { get; set; }
     }
 }

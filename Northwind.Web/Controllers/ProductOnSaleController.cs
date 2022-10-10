@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Northwind.Contracts.Dto.Order;
+using Northwind.Contracts.Dto.Product;
 using Northwind.Services.Abstraction;
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 
@@ -13,6 +16,33 @@ namespace Northwind.Web.Controllers
         public ProductOnSaleController(IServiceManager context)
         {
             _context = context;
+        }
+        [HttpPost]
+        public async Task<ActionResult> CreateFullOrder(ProductDto productDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var productId = productDto.ProductId;
+
+                var order = new OrderForCreateDto
+                {
+                    OrderDate = DateTime.Now,
+                    RequiredDate = DateTime.Now.AddDays(3)
+                };
+
+                var orderDetail = new OrderDetailForCreateDto
+                {
+                    ProductId = productId,
+                    UnitPrice = (decimal)productDto.UnitPrice,
+                    Quantity = Convert.ToInt16(productDto.QuantityPerUnit),
+                    Discount = 0
+                };
+                _context.ProductService.CreateOrderDetail(order, orderDetail);
+                return RedirectToAction(nameof(Index));
+            }
+
+
+            return View(productDto);
         }
 
         // GET: ProductOnSale

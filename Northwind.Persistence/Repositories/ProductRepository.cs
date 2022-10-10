@@ -39,6 +39,7 @@ namespace Northwind.Persistence.Repositories
             return await FindByCondition(p => p.ProductId.Equals(productId), trackChanges)
                 .Include(c => c.Category)
                 .Include(s => s.Supplier)
+                .Include(o => o.OrderDetails)
                 .SingleOrDefaultAsync();
         }
 

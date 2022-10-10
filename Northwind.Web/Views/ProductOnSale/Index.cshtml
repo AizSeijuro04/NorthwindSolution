@@ -5,12 +5,10 @@
 <div class="flex-lg-wrap">
     @using (Html.BeginForm("Index", "ProductOnSale", FormMethod.Get))
     {
-        <div>
             <p>
                 Find By @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { placeholder = "Product Name" })
                 <input type="submit" value="Search" />
             </p>
-        </div>
     }
 </div>
 

@@ -1,23 +1,5 @@
 ﻿@model IEnumerable<Northwind.Contracts.Dto.Product.ProductDto>
 
-<style>
-    {
-        box-sizing: border-box;
-    }
-    /* Set additional styling options for the columns*/
-    .column {
-    float: left;
-    width: 50%;
-    position: rigth;
-    }
-
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
-    }
-</style>
-
 <h4>Products On Sale</h4>
 
 <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
@@ -30,9 +12,6 @@
                 <input type="submit" value="Search" />
             </p>
         }
-    </div>
-    <div class="column">
-        <i class='fas fa-shopping-cart' style='font-size:30px'></i>
     </div>
 </div>
 
@@ -56,10 +35,12 @@
                 </p>
                 <div>
                     <a asp-action="Details" asp-route-id="@item.ProductId">
-                        <button class="btn btn-secondary me-md-2" type="button">Detail</button>
+                        <button class="btn btn-primary me-md-2" type="button">Detail</button>
                     </a>
                     <a asp-action="" asp-route-id="@item.ProductId">
-                        <button class="btn btn-primary me-md-2" type="button">Add To Cart</button>
+                        <button type="button" class="btn btn-danger">
+                            Add to Cart <i class="fas fa-shopping-cart"></i>
+                        </button>
                     </a>
                 </div>
             </div>

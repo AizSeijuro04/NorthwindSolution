@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Northwind.Domain.Models.User> SignInManager
+@inject UserManager<Northwind.Domain.Models.User> UserManager
+
+<!DOCTYPE html>
 
 <!-- =========================================================
 * Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
@@ -27,35 +31,7 @@
 
     <meta name="description" content="" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="~/lib/sneat-1.0.0/assets/img/favicon/favicon.ico" />
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-          rel="stylesheet" />
-
-    <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="~/lib/sneat-1.0.0/assets/vendor/fonts/boxicons.css" />
-
-    <!-- Core CSS -->
-    <link rel="stylesheet" href="~/lib/sneat-1.0.0/assets/vendor/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="~/lib/sneat-1.0.0/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="~/lib/sneat-1.0.0/assets/css/demo.css" />
-
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" href="~/lib/sneat-1.0.0/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-
-    <link rel="stylesheet" href="~/lib/sneat-1.0.0/assets/vendor/libs/apex-charts/apex-charts.css" />
-
-    <!-- Page CSS -->
-    <!-- Helpers -->
-    <script src="~/lib/sneat-1.0.0/assets/vendor/js/helpers.js"></script>
-
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="~/lib/sneat-1.0.0/assets/js/config.js"></script>
+    <partial name="_HeadPartial" />
 </head>
 
 <body>
@@ -129,7 +105,7 @@
                         </a>
                     </li>
 
-       
+
                     <li class="menu-header small text-uppercase active">
                         <span class="menu-header-text">Menus</span>
                     </li>
@@ -182,12 +158,27 @@
                                     <div data-i18n="Basic">Suppliers</div>
                                 </a>
                             </li>
+                            <li class="menu-item">
+                                <a class="menu-link" asp-controller="ClientSide" asp-action="IndexJS">
+                                    <div data-i18n="Basic">JavaScript</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" asp-area="" asp-controller="ClientSide" asp-action="IndexJQuery">
+                                    <div data-i18n="Basic">JQuery</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" asp-area="" asp-controller="ClientSide" asp-action="IndexChart">
+                                    <div data-i18n="Basic">Chart</div>
+                                </a>
+                            </li>
                         </ul>
                     </li>
-                
-                    
 
-                  
+
+
+
             </aside>
             <!-- / Menu -->
             <!-- Layout container -->
@@ -217,20 +208,20 @@
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <!-- Place this tag where you want the button to render. -->
+
                             <li class="nav-item lh-1 me-3">
-                                <a class="github-button"
-                                   href="https://github.com/themeselection/sneat-html-admin-template-free"
-                                   data-icon="octicon-star"
-                                   data-size="large"
-                                   data-show-count="true"
-                                   aria-label="Star themeselection/sneat-html-admin-template-free on GitHub">Star</a>
+                                <a asp-controller="ProductOnSale" asp-action="MyCart">
+                                    <button type="button" class="btn btn-buy-now">
+                                        My Cart <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </a>
                             </li>
 
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
-                                        <img src="~/lib/sneat-1.0.0/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                                        <img src="~/lib/sneat-1.0.0/assets/img/avatars/5.png" alt class="w-px-40 h-auto rounded-circle" />
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -239,13 +230,16 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-                                                        <img src="~/lib/sneat-1.0.0/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                                                        <img src="~/lib/sneat-1.0.0/assets/img/avatars/5.png" alt class="w-px-40 h-auto rounded-circle" />
                                                     </div>
                                                 </div>
-                                                <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">John Doe</span>
-                                                    <small class="text-muted">Admin</small>
-                                                </div>
+                                                @if (SignInManager.IsSignedIn(User))
+                                                {
+                                                    <div class="flex-grow-1">
+                                                        <span class="fw-semibold d-block">@User.Identity.Name</span>
+                                                        <small class="text-muted">@User.Claims.FirstOrDefault(c=>c.Type.Contains("role",StringComparison.OrdinalIgnoreCase))?.Value</small>
+                                                    </div>
+                                                }
                                             </div>
                                         </a>
                                     </li>
@@ -276,12 +270,19 @@
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" href="auth-login-basic.html">
-                                            <i class="bx bx-power-off me-2"></i>
-                                            <span class="align-middle">Log Out</span>
-                                        </a>
-                                    </li>
+
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item">
+                                                <form class="dropdown-item" asp-controller="Account" asp-action="Logout">
+                                                    <span type="submit" class="align-middle nav-link btn btn-link text-info"><i class="bx bx-power-off me-2"></i>Logout</span>
+                                                </form>
+                                            </a>
+                                        </li>
+                                    }
+
+
                                 </ul>
                             </li>
                             <!--/ User -->
@@ -298,7 +299,7 @@
                         <div class="row">
                             @RenderBody()
                         </div>
-                       
+
                     </div>
                     <!-- / Content -->
                     <!-- Footer -->
@@ -339,7 +340,6 @@
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
     <!-- / Layout wrapper -->
-
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="~/lib/sneat-1.0.0/assets/vendor/libs/jquery/jquery.js"></script>

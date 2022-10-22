@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Northwind.Domain.Base;
+using Northwind.Domain.Dto;
 using Northwind.Domain.Models;
 using Northwind.Domain.Repositories;
 using Northwind.Persistence.Base;
@@ -63,6 +64,7 @@ namespace Northwind.Persistence.Repositories
             var products = await FindByCondition(x => x.ProductId.Equals(productId), trackChanges)
                 .Where(y => y.ProductPhotos.Any(p => p.PhotoProductId == productId))
                 .Include(a => a.ProductPhotos)
+                .Include(b => b.Category)
                 .SingleOrDefaultAsync();
             return products;
         }
@@ -75,6 +77,22 @@ namespace Northwind.Persistence.Repositories
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public IEnumerable<TotalProductByCategory> GetTotalProductByCategory()
+        {
+            var rawSQL = _dbContext.TotalProductByCategorySQL
+                .FromSqlRaw("select c.CategoryName,COUNT(p.productID) as totalproduct " +
+                "from products p join Categories c on p.categoryID=c.categoryID " +
+                "group by c.categoryname")
+                .Select(x => new TotalProductByCategory
+                {
+                    CategoryName = x.CategoryName,
+                    TotalProduct = x.TotalProduct
+                })
+                .OrderBy(x => x.TotalProduct)
+                .ToList();
+            return rawSQL;
         }
 
         public void Insert(Product product)

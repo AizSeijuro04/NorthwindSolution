@@ -1,17 +1,22 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Northwind.Domain.Base;
+using Northwind.Domain.Models;
 using Northwind.Persistence;
 using Northwind.Persistence.Base;
 using Northwind.Services;
 using Northwind.Services.Abstraction;
+using Northwind.Web.Extensions;
+using Northwind.Web.Factory;
 using Northwind.Web.Models;
 using Northwind.Web.Repository;
 using System;
@@ -34,13 +39,43 @@ namespace Northwind.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsFactory>();
+
             services.AddControllersWithViews();
+            //Authorization
+            
+            /*services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/login";
+                    options.Events = new CookieAuthenticationEvents()
+                    {
+                        OnSigningIn = async context =>
+                        {
+                            await Task.CompletedTask;
+                        },
+                        OnSigningOut = async context =>
+                        {
+                            await Task.CompletedTask;
+                        },
+                        OnValidatePrincipal = async context =>
+                        {
+                            await Task.CompletedTask;
+                        }
+                    };
+                });
+            */
+
             //call interface & implementation
             services.AddScoped<IEmployee, EmployeeRepository>();
             services.AddScoped<IRepositoryManager, RepositoryManager>();
             services.AddScoped<IServiceManager, ServiceManager>();
             services.AddScoped<IUtilityService, UtilityService>();
             services.AddAutoMapper(typeof(Startup));
+
+            //add configureidentity from serviceExtension
+            services.ConfigureIdentity();
+            //services.ConfigureApplicationCookie(o => o.LoginPath = "/Authentication/Login");
 
             // register dbcontext
             services.AddDbContext<NorthwindContext>(opts =>
@@ -74,6 +109,8 @@ namespace Northwind.Web
 
             app.UseRouting();
 
+            //autentifikasi
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

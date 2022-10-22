@@ -1,4 +1,4 @@
-﻿@model Northwind.Contracts.Dto.Product.ProductDto
+﻿    @model Northwind.Contracts.Dto.Product.ProductDto
 
 
 <h2>Detail Product</h2>
@@ -55,7 +55,9 @@
                 </div>
 
                 <div class="product-price">
-                    @*<p class="last-price">Old Price: <span>$257.00</span></p>*@
+                    @*<p class="last-price">Old Price: <span>$257.00</span></p>
+                ToString("C", new CultureInfo("id-ID"))
+                *@
 
                     @Html.HiddenFor(Model=>Model.UnitPrice)
                     <p class="new-price">Unit Price: <span> @Html.DisplayFor(model=>model.UnitPrice) </span></p>
@@ -65,15 +67,20 @@
                     <h2>about this item: </h2>
                     <ul>
                         <li>Available: <span>in stock</span></li>
-                        <li>Category: <span>@Html.DisplayFor(model=>model.CategoryId)</span></li>
+                        <li>Category: <span>@Html.DisplayFor(model=>model.Category.CategoryName)</span></li>
                         <li>Shipping Fee: <span>Free</span></li>
                     </ul>
                 </div>
                 <div class="purchase-info">
                     @Html.TextBox("QuantityPerUnit",1,new {@type="number"})
                     <button type="submit" class="btn btn-danger">
-                        Create Order
+                        Buy Now
                     </button>
+                    <a asp-action="MyCart" asp-route-id="ProductId">
+                        <button type="button" class="btn btn-danger">
+                            Add to Cart <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </a>
                 </div>
 
                 <div class="social-links">

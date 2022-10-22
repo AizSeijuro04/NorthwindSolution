@@ -1,0 +1,128 @@
+﻿
+<h3>JQuery</h3>
+<h4 id="today"></h4>
+<div class="row g-3">
+    <div>
+        <input id="firstName" placeholder="First Name" />
+    </div>
+    <div>
+        <button id="btnFirstName" class="btn-primary">Klik First Name</button>
+    </div>
+</div>
+<br />
+<div class="row g-3">
+    <div>
+        <input id="lastName" placeholder="Last Name" />
+    </div>
+    <div>
+        <button class="btn-secondary">Click LastName</button>
+    </div>
+</div>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                Product
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Total Price
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input id="product" value="Bike" />
+            </td>
+            <td>
+                <input id="price" value="15" />
+            </td>
+            <td>
+                <input id="qty" value="1" readonly/>
+            </td>
+            <td>
+                <input id="subTotalPrice" value="15" readonly />
+            </td>
+            <td>
+                <button id="btnAdd" class="btn-primary">AddItem</button>
+            </td>
+        </tr>
+    </thead>
+</table>
+<br />
+<form id="formSubmit">
+    <input id="CategoryName" placeholder="Category Name" />
+    <input id="Description" placeholder="Description" />
+    <button type="submit">Save Me</button>
+</form>
+
+
+
+@section scripts{
+    <script type="text/javascript">
+        let today = new Date();
+        
+        $(document).ready(function(){
+            console.log('document ready');
+            $("#today").text(today);
+
+        });
+
+        $('#btnFirstName').on('click',()=>{
+            $("#firstName").val("Hello BootCamp");
+        });
+
+        $('.btn-secondary').on('click', () => {
+            $("#lastName").val("JQuery");
+        });
+
+        $('#btnAdd').on('click', () => {
+        
+        });
+
+        $('#btnAdd').on('click',() => {
+            let price =$('#price').val();
+            let qty=$('#qty').val();
+
+            let counter = qty;
+            counter++;
+            $('#qty').val(counter);
+
+            $('#subTotalPrice').val(parseFloat(price) * parseInt(qty))
+        });
+
+        $("#formSubmit").submit((e)=>{
+            //mencegah spy page tidak langsung submit ke server
+            e.preventDefault();
+
+            //buat object categoryForCreateDto pastikan sama dengan parameter di controller
+            let categoryForCreateDto ={
+                CategoryName : $('#CategoryName').val(),
+                Description : $('#Description').val()
+            }
+
+            //send object via aja
+            $.ajax({
+                type : "POST",
+                url: '/ClientSide/PostCategory',
+                data: JSON.stringify(categoryForCreateDto),
+                dataType:'json',
+                contentType: 'application/json',
+                success :function(result){
+                    console.log(result)
+                    alert('Data has been save');
+                },
+                error : function(result){
+                    console.log(result)
+                    alert('Data failed to save');
+                }
+            });
+        });
+    </script>
+}
